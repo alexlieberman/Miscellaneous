@@ -1,0 +1,179 @@
+   <!DOCTYPE html>
+   <meta charset="utf-8">
+   <head>
+   <meta content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' name='viewport' />
+   <meta name="viewport" content="width=device-width" />
+   </head>
+   <script type="text/javascript" src="http://d3js.org/d3.v3.js">
+   </script>
+   <body onload="initialize()">
+   <script>
+
+   var supportsTouch = false;
+
+   function initialize() {
+      supportsTouch = 'ontouchstart' in window;
+   }
+
+   var width = window.innerWidth-40;
+   var height = window.innerHeight-40;
+
+   var svg = d3.select("body").append("svg")
+       .attr("width", width)
+       .attr("height", height)
+     .append("g");
+
+   var za = 0;
+   var zg = 0;
+   var zc = 100;
+
+   var mouse = false;
+   var touch = false;
+
+   function mousedown()
+   {
+     if (supportsTouch == false) {
+       mouse = true;
+     }
+     else {
+       touch = true;
+     }
+     callEvent();
+   }
+   function mouseup()
+   {
+     if (supportsTouch == false) {
+       mouse = false;
+     }
+     else {
+       touch = false;
+     }
+   }
+   function callEvent()
+   {
+    if(mouse || touch)
+    {
+
+      count++;
+
+   if (supportsTouch == false) {
+     svg2.addEventListener('mousemove',function(evt){
+     var loc = cursorPoint(evt);
+     xspot=loc.x;
+     yspot=loc.y;
+   },false);
+   } else {
+     svg2.addEventListener('touchmove',function(evt){
+     var loc = touchPoint(evt);
+     xspot=loc.x;
+     yspot=loc.y;
+   },false);
+
+   }
+
+
+  
+     if (za > 100) {
+     za-=.5;
+     } else if (za > 50) {
+     za-=.4;
+     } else if (za > 10) {
+     za-=.2;
+     } else if (za > 2) {
+     za-=.3;
+     } else if (za > 0) {
+     za-=.1;
+     } else {
+       za=0;
+     }
+
+     zg+=.01;
+     moveSize();
+     getColor();
+     
+     if (count%5==0)
+     svg.append("circle")
+     .attr("cx",xspot)
+     .attr("cy",yspot)
+     .attr("r", za)
+     .style("fill", colorNow)
+     .style("fill-opacity", zg);
+
+     setTimeout("callEvent()",1);
+    }
+    else
+    return;
+   }
+
+
+
+   var svg2 = document.querySelector('svg');
+   var pt = svg2.createSVGPoint();
+
+   function cursorPoint(evt){
+     pt.x = evt.clientX; pt.y = evt.clientY;
+     return pt;
+   }
+
+   
+   function touchPoint(evt){
+     pt.x = evt.touches[0].clientX; pt.y = evt.touches[0].clientY;
+     return pt;
+   }
+
+
+   document.body.ontouchstart=function() {
+      moveSize();
+      za=zc; count = 5; zg = .20; 
+  
+     svg2.addEventListener('touchstart',function(evt){
+     var loc = touchPoint(evt);
+     xspot=loc.x;
+     yspot=loc.y;
+     },false);
+
+
+      mousedown();
+   };
+
+   document.body.ontouchend=function() {
+     mouseup();
+   };
+
+
+   document.body.onmousedown=function() {
+      moveSize();
+      za=zc; count = 5; zg = .20; mousedown();};
+
+   document.body.onmouseup=function() {mouseup();};
+
+
+ var count = 5;
+   var cycle = 0;
+   var colorNow = "blue";
+   function getColor() {
+     cycle++;
+     if (cycle==1) {
+       colorNow = "red";
+     } else if (cycle==2) {
+       colorNow = "green";
+     } else if (cycle==3) {
+       colorNow = "blue";
+     } else if (cycle==4) {
+       colorNow = "yellow";
+       cycle = 0;
+     }
+   }
+
+   function moveSize() {
+   if (zc > 200) {
+       zc = 100;
+     } else {
+       zc += 2;
+     }
+   }
+
+
+
+
+   </script>
