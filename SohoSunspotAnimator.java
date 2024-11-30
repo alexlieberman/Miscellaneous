@@ -36,6 +36,9 @@ import java.io.File;
 // Auto-threaded application to download all the SOHO sunspot image
 // into a folder and auto generates an animated image
 // NOTE: Uses maximum threads available 
+// Uses GifSequenceWriter by John Loomis 
+// Available @ https://johnloomis.org/ece538/notes/java4/createGIF/GifSequenceWriter.java.html
+// The GIF generator is off by default in this copy (Line 182)
 ///-------------------------------------------------------
 public class SohoSunspotAnimator {
 
@@ -176,7 +179,7 @@ public class SohoSunspotAnimator {
 				ArrayList<String> ordered_files = processFiles();
 				System.out.println("Total Downloaded: " + countDownloaded);
 				System.out.println("Potential Errors: " + deadLetter);
-				makeImage(ordered_files);
+				//makeImage(ordered_files);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
